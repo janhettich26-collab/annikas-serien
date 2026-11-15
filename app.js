@@ -1,5 +1,5 @@
 /* Annikas Serien – alles läuft im Browser; Abgleich & Push über GitHub (Zweig "daten") */
-const CFG = { owner: 'janhettich26-collab', repo: 'annikas-serien', branch: 'daten',
+const CFG = { check: '15e41090f108a20c08930cceb91a70e016dbd855cae6a910ff2f4684fbf9ddf0', owner: 'janhettich26-collab', repo: 'annikas-serien', branch: 'daten',
   vapid: 'BArCpAXW_imzXuqBKmAYiZ4szxtO6v1w4Rgqs2hkv4tfzyEnrE5X6BQk-2i6-yxq9zyvbEDqtH6OzHWZ_GNeWIM' };
 const ST = {
   a: { l: 'Schaue ich', k: 'Schaue ich gerade', d: 'bin mittendrin', i: '✕' },
@@ -85,11 +85,12 @@ function settings() {
   ${!standalone ? '<div class="info">iPhone: erst unten auf „Teilen“ tippen → „Zum Home-Bildschirm“. Dann die App vom Home-Bildschirm öffnen und hier einschalten.</div>' : ''}
   <button class="big" data-push>Benachrichtigungen einschalten</button>
   <div class="lbl">Abgleich</div>
-  <p class="tx" id="syncInfo">${tok ? 'Verbunden – dein Stand wird automatisch gesichert.' : 'Noch nicht verbunden: dein Stand liegt nur auf diesem Gerät. Öffne einmal den persönlichen Link von Jan, dann wird gesichert und Push funktioniert.'}</p>
+  <p class="tx" id="syncInfo">${tok ? 'Verbunden – dein Stand wird automatisch gesichert.' : 'Noch nicht verbunden: dein Stand liegt nur auf diesem Gerät. Die Sicherung wird von Jan noch freigeschaltet – danach geht es automatisch.'}</p>
   ${tok ? '<button class="ghost" data-sync>Jetzt abgleichen</button>' : ''}
   <div class="lbl">Sicherung</div>
   <button class="ghost" data-exp>Meinen Stand kopieren</button>
-  <button class="ghost" data-imp>Stand einfügen (wiederherstellen)</button>`);
+  <button class="ghost" data-imp>Stand einfügen (wiederherstellen)</button>
+  <button class="ghost" data-out>Abmelden</button>`);
 }
 let addT;
 function addSheet() {
@@ -157,14 +158,14 @@ async function pushState(retry) {
     if (r.status === 409 || r.status === 422) { if (retry) return; await pull(); return pushState(true); }
     if (r.ok) sha = (await r.json()).content.sha; } catch (e) { console.warn(e); }
 }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { loadBase(); pull(); } });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && localStorage.dk) { loadBase().then(unlockKey).then(pull); } });
 
 /* ---------- Push ---------- */
 const u8 = s => Uint8Array.from(atob((s + '='.repeat((4 - s.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
 async function enablePush() {
   try {
     if (!('PushManager' in window) || !('Notification' in window)) return toast('Erst zum Home-Bildschirm hinzufügen');
-    if (!tok) return toast('Erst den persönlichen Link öffnen');
+    if (!tok) return toast('Sicherung ist noch nicht freigeschaltet');
     if (await Notification.requestPermission() !== 'granted') return toast('Mitteilungen sind nicht erlaubt');
     const reg = await navigator.serviceWorker.ready;
     const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: u8(CFG.vapid) });
@@ -179,6 +180,38 @@ async function loadBase() {
   try { const [s, n] = await Promise.all([fetch('data/shows.json', { cache: 'no-cache' }).then(r => r.json()), fetch('data/news.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => ({}))]);
     base = s; news = n.events || []; if (n.checked) $('#stand').textContent = 'Zuletzt geprüft: ' + deDate(n.checked); localStorage.base = JSON.stringify(s); render(); } catch (e) { }
 }
-try { base = JSON.parse(localStorage.base || '[]'); if (base.length) render(); } catch (e) {}
+/* ---------- Anmeldung (Name + Passwort; entschluesselt auch den Abgleich-Schluessel) ---------- */
+const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''), unhex = h => Uint8Array.from(h.match(/../g), x => parseInt(x, 16));
+async function derive(name, pw) {
+  const enc = new TextEncoder(), km = await crypto.subtle.importKey('raw', enc.encode(pw.trim().toLowerCase()), 'PBKDF2', false, ['deriveBits']);
+  return crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: enc.encode('annikas-serien:' + name.trim().toLowerCase()), iterations: 200000 }, km, 256);
+}
+async function unlockKey() { // holt den verschluesselten Abgleich-Schluessel und oeffnet ihn mit dem Passwort
+  if (tok || !localStorage.dk) return;
+  try { const k = await fetch('data/key.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null); if (!k) return;
+    const key = await crypto.subtle.importKey('raw', unhex(localStorage.dk), 'AES-GCM', false, ['decrypt']);
+    tok = new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unhex(k.iv) }, key, unhex(k.ct))); localStorage.ghk = tok; } catch (e) { console.warn(e); }
+}
+function start() {
+  try { base = JSON.parse(localStorage.base || '[]'); if (base.length) render(); } catch (e) {}
+  loadBase().then(unlockKey).then(pull);
+}
+function login() {
+  const el = document.createElement('div'); el.id = 'login';
+  el.innerHTML = `<form><div class="logo">🎬</div><h1>Annikas <span>Serien</span></h1><p>Bitte anmelden</p>
+  <input id="lgN" placeholder="Name" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false">
+  <input id="lgP" type="password" placeholder="Passwort" autocomplete="current-password" autocapitalize="off">
+  <button class="big">Anmelden</button><p id="lgE"></p></form>`;
+  document.body.appendChild(el);
+  el.querySelector('form').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const dk = await derive($('#lgN').value, $('#lgP').value);
+    if (hex(await crypto.subtle.digest('SHA-256', dk)) !== CFG.check) { $('#lgE').textContent = 'Name oder Passwort stimmt nicht.'; $('#lgP').value = ''; return; }
+    localStorage.dk = hex(dk); el.remove(); start();
+  });
+}
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-loadBase().then(pull);
+if (localStorage.dk) start(); else login();
+
+/* Abmelden */
+document.addEventListener('click', e => { if (e.target.closest('[data-out]')) { localStorage.removeItem('dk'); localStorage.removeItem('ghk'); location.reload(); } });
