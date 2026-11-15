@@ -45,7 +45,10 @@ function render() {
   const plain = filter === 'alle' && !query;
   const now = list.filter(s => eff(s).st === 'a');
   $('#secNow').hidden = !plain || !now.length;
-  $('#now').innerHTML = now.map(s => { const e = eff(s); return `<div class="now" data-id="${s.id}">${s.img ? `<img src="${esc(s.img)}" alt="">` : ''}<div class="inf"><div class="t">${esc(s.title)}</div><div class="m">${pos(e)}</div><button class="plus" data-plus="${s.id}">＋ Folge geschaut</button></div></div>`; }).join('');
+  const nowEl = $('#now'), sl = nowEl.scrollLeft;
+  nowEl.innerHTML = now.map(s => { const e = eff(s); return `<div class="now" data-id="${s.id}"><div class="nbg" style="background-image:url('${esc(s.img || '')}')"></div>${s.img ? `<img src="${esc(s.img)}" alt="">` : ''}<div class="inf"><div class="t">${esc(s.title)}</div><div class="m">${pos(e)}</div><button class="plus" data-plus="${s.id}">＋ Folge geschaut</button></div></div>`; }).join('');
+  nowEl.scrollLeft = sl;
+  $('#dots').innerHTML = now.length > 1 ? now.map(() => '<i></i>').join('') : ''; markDot();
   const nw = list.map(s => [s, hint(s)]).filter(x => x[1] && x[1].hot && eff(x[0]).st === 'w');
   $('#secNew').hidden = !plain || !nw.length;
   $('#new').innerHTML = nw.map(([s, h]) => `<div class="nw" data-id="${s.id}"><div class="card">${poster(s)}</div><div class="tag">${esc(h.short)}</div></div>`).join('');
@@ -215,3 +218,16 @@ if (localStorage.dk) start(); else login();
 
 /* Abmelden */
 document.addEventListener('click', e => { if (e.target.closest('[data-out]')) { localStorage.removeItem('dk'); localStorage.removeItem('ghk'); location.reload(); } });
+
+/* Oben gleitet automatisch durch, was sie gerade schaut */
+let glideHold = 0;
+const slideW = el => el.children.length > 1 ? el.children[1].offsetLeft - el.children[0].offsetLeft : 1;
+function markDot() { const el = $('#now'), i = Math.round(el.scrollLeft / slideW(el)); [...$('#dots').children].forEach((d, k) => d.className = k === i ? 'on' : ''); }
+$('#now').addEventListener('scroll', markDot, { passive: true });
+['touchstart', 'pointerdown'].forEach(ev => $('#now').addEventListener(ev, () => glideHold = Date.now() + 8000, { passive: true }));
+setInterval(() => {
+  const el = $('#now'), n = el.children.length;
+  if (n < 2 || $('#secNow').hidden || !$('#sheet').hidden || document.hidden || Date.now() < glideHold) return;
+  let i = Math.round(el.scrollLeft / slideW(el)) + 1; if (i >= n) i = 0;
+  el.scrollTo({ left: i * slideW(el), behavior: 'smooth' });
+}, 3500);

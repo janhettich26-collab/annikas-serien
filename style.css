@@ -85,3 +85,13 @@ footer a{color:var(--mu)}
 #login input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--tx);font-size:16px;outline:none;margin-bottom:10px}
 #login input:focus{border-color:var(--pink)}
 #lgE{color:var(--red)!important;min-height:20px;margin-top:12px!important}
+#now{scroll-snap-type:x mandatory;scroll-padding-left:16px}
+#now .now{width:100%;max-width:none;position:relative;overflow:hidden;padding:14px;gap:14px;min-height:158px;border-radius:20px}
+#now .nbg{position:absolute;inset:-30px;background-size:cover;background-position:center 25%;filter:blur(22px) brightness(.45);z-index:0}
+#now .now>img,#now .inf{position:relative;z-index:1}
+#now .now>img{width:92px;height:130px;box-shadow:0 6px 18px #000a}
+#now .t{font-size:20px;white-space:normal;line-height:1.15}
+#now .m{font-size:14px;color:#e2e2ee}
+#dots{display:flex;justify-content:center;gap:6px;margin-top:10px}
+#dots i{width:6px;height:6px;border-radius:99px;background:#3a3a4c;transition:all .3s}
+#dots i.on{width:18px;background:linear-gradient(90deg,var(--pink),var(--or))}
