@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Annikas Serien</title>
+<meta name="theme-color" content="#0b0b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Serien">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<header>
+  <div class="top">
+    <div>
+      <h1>Annikas <span>Serien</span></h1>
+      <p id="sub">lädt …</p>
+    </div>
+    <div class="topbtn">
+      <button id="btnAdd" aria-label="Serie hinzufügen">＋</button>
+      <button id="btnSet" aria-label="Einstellungen">⚙︎</button>
+    </div>
+  </div>
+  <div class="search"><input id="q" type="search" placeholder="Serie suchen …" autocomplete="off"></div>
+  <nav id="chips"></nav>
+</header>
+
+<main>
+  <section id="secNow" hidden>
+    <h2>Schaue ich gerade</h2>
+    <div id="now" class="row"></div>
+  </section>
+  <section id="secNew" hidden>
+    <h2>Neu für dich</h2>
+    <div id="new" class="row"></div>
+  </section>
+  <section>
+    <div class="h2row"><h2 id="gridTitle">Alle Serien</h2>
+      <button id="sort" class="link">Reihenfolge: Liste</button></div>
+    <div id="grid" class="grid"></div>
+    <p id="empty" hidden>Nichts gefunden.</p>
+  </section>
+  <footer>Staffeldaten &amp; Titelbilder: <a href="https://www.tvmaze.com" target="_blank" rel="noopener">TVmaze</a> · wird jede Woche automatisch aktualisiert<br><span id="stand"></span></footer>
+</main>
+
+<div id="veil" hidden></div>
+<div id="sheet" class="sheet" hidden></div>
+<div id="toast" hidden></div>
+<script src="app.js?v=1"></script>
+</body>
+</html>

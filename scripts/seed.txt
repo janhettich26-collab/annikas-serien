@@ -1,0 +1,138 @@
+1|Pretty Little Liars|Pretty Little Liars|2010|7||f
+2|Elementary|Elementary||7||f
+3|How to Get Away with Murder|How to Get Away with Murder||6||f
+4|Jane the Virgin|Jane the Virgin||5||f
+5|Shadowhunters|Shadowhunters||4||f
+6|Vampire Diaries|The Vampire Diaries||8||f
+7|The Originals|The Originals||4|3|x
+8|Brooklyn Nine-Nine|Brooklyn Nine-Nine||8||f
+9|White Collar|White Collar||6||f
+10|Gossip Girl|Gossip Girl|2007|6||f
+11|Stranger Things|Stranger Things||2||x
+12|Greenhouse Academy|Greenhouse Academy||2||x
+13|Modern Family|Modern Family||11||f
+14|Limitless|Limitless|2015|1||f
+15|Suits|Suits|2011|5|11|x
+16|Castle|Castle|2009|8||f
+17|Grey's Anatomy|Grey's Anatomy||22|10|a
+18|Riverdale|Riverdale||5|10|x
+19|Night Shift|The Night Shift||4||f
+20|Arrow|Arrow|2012|4||x
+21|Witches of East End|Witches of East End||2||f
+22|Scorpion|Scorpion|2014|4||f
+23|Orphan Black|Orphan Black|2013|5||f
+24|New Girl|New Girl||7||f
+25|Haus des Geldes|Money Heist|2017|5||f
+26|Prison Break|Prison Break||5||f
+27|Altered Carbon|Altered Carbon||2||f
+28|Jessica Jones|Marvel's Jessica Jones||1|8|x
+29|Hawaii Five-0|Hawaii Five-0|2010|10||f
+30|Friends|Friends|1994|10||f
+31|The Blacklist|The Blacklist|2013|10||f
+32|The Good Wife|The Good Wife||3|5|x
+33|UnREAL|UnREAL||4||f
+34|The Bold Type|The Bold Type||5||f
+35|Der Denver-Clan|Dynasty|2017|4|7|x
+36|Good Girls|Good Girls|2018|4||f
+37|Queen of the South|Queen of the South||5||f
+38|Forever|Forever|2014|1||f
+39|The Royals|The Royals|2015|4||f
+40|Code Black|Code Black||2||w
+41|Shameless|Shameless|2011|11||f
+42|Bones|Bones|2005|12||f
+43|Friends from College|Friends from College||2||f
+44|Sex Education|Sex Education||4|1|x
+45|Wer zuletzt kocht|The Final Table||1||f
+46|Bodyguard|Bodyguard|2018|1||f
+47|Baby|Baby|2018|3||f
+48|Du wirst mich lieben|You|2018|5||f
+49|Élite|Elite|2018|8||f
+50|Travelers|Travelers|2016|3||f
+51|Ein Liebesplan|The Hook Up Plan||3||f
+52|Mistresses|Mistresses|2013|4||f
+53|Lie to Me|Lie to Me||3||f
+54|Criminal Minds|Criminal Minds|2005|19||w
+55|Lucifer|Lucifer||6||f
+56|The Order|The Order|2019|2||f
+57|Cloak & Dagger|Marvel's Cloak & Dagger||2||f
+58|Body of Proof|Body of Proof||3||f
+59|The Protector|The Protector|2018|4||f
+60|How I Met Your Mother|How I Met Your Mother||9||f
+61|Marvel's Agents of S.H.I.E.L.D.|Marvel's Agents of S.H.I.E.L.D.||4||w
+62|The Mentalist|The Mentalist||7||f
+63|Private Practice|Private Practice||6||f
+64|Chicago Fire|Chicago Fire||5||w
+65|Virgin River|Virgin River||7||w
+66|Blindspot|Blindspot||5||f
+67|Chicago P.D.|Chicago P.D.||5||w
+68|Bad Blood|Bad Blood|2017|2||f
+69|Finger weg!|Too Hot to Handle|2020|6||w
+70|Outer Banks|Outer Banks||5||f
+71|Locke & Key|Locke & Key||3||f
+72|Dead to Me|Dead to Me||3||f
+73|Into the Night|Into the Night|2020|2||w
+74|Sherlock Holmes|Sherlock|2010|4||w
+75|Jeffrey Epstein|Jeffrey Epstein: Filthy Rich||1||f
+76|Revenge|Revenge|2011|4||f
+77|Wu Assassins|Wu Assassins||1||f
+78|Sons of Anarchy|Sons of Anarchy||7||f
+79|Seattle Firefighters|Station 19||7||f
+80|Emily in Paris|Emily in Paris||5||w
+81|Süße Magnolien|Sweet Magnolias||5||w
+82|Dein letztes Solo|Tiny Pretty Things||1||w
+83|Bridgerton|Bridgerton||4||w
+84|Lupin|Lupin|2021|4||w
+85|Fate: The Winx Saga|Fate: The Winx Saga||2||w
+86|S.W.A.T.|S.W.A.T.|2017|8||w
+87|Flashpoint|Flashpoint|2008|5||f
+88|Ginny & Georgia|Ginny & Georgia||3||w
+89|Shadow & Bone|Shadow and Bone||2||w
+90|New Amsterdam|New Amsterdam|2018|5||f
+91|The Good Doctor|The Good Doctor|2017|6||w
+92|Chicago Med|Chicago Med||3||w
+93|Salvation|Salvation|2017|2||f
+94|The Witcher|The Witcher|2019|4||w
+95|The Office|The Office|2005|9||f
+96|Inventing Anna|Inventing Anna||1||f
+97|L.A.'s Finest|L.A.'s Finest||2||w
+98|Raising Dion|Raising Dion||2||w
+99|Anatomie eines Skandals|Anatomy of a Scandal||1||w
+100|The Lincoln Lawyer|The Lincoln Lawyer||4||w
+101|Surviving Summer|Surviving Summer||1||w
+102|The Rookie|The Rookie|2018|7||w
+103|Rosewood|Rosewood||2||f
+104|Criminal Minds: Beyond Borders|Criminal Minds: Beyond Borders||2||f
+105|9-1-1: Lone Star|9-1-1: Lone Star||5||f
+106|9-1-1|9-1-1|2018|9|12|a
+107|Devil in Ohio|Devil in Ohio||1||f
+108|Atlanta Medical|The Resident|2018|6||f
+109|Person of Interest|Person of Interest||5||f
+110|Finger weg! Germany|Too Hot to Handle: Germany||2||w
+111|Scandal|Scandal|2012|7||f
+112|Emergency: NYC|Emergency: NYC||1||f
+113|The Diplomat|The Diplomat|2023|4||w
+114|Queen Charlotte|Queen Charlotte: A Bridgerton Story||1||w
+115|Johnny Depp gegen Amber Heard|Depp v. Heard||1||w
+116|Völlig zerstört|Obliterated||1||w
+117|Law & Order: Special Victims Unit|Law & Order: Special Victims Unit||11||w
+118|Vikings|Vikings|2013|4|6|x
+119|Maxton Hall|Maxton Hall||1||w
+120|Clans|Clanes||2||w
+121|Homeland|Homeland|2011|8||f
+122|Monster|Monster|2022|1||f
+123|Cold Case|Cold Case|2003|7||f
+124|High Potential|High Potential|2024|2||w
+125|Medusa|Medusa|2025|1||w
+126|Zero Day|Zero Day|2025|1||w
+127|Gabby Petito|American Murder: Gabby Petito||1||w
+128|Dr. House|House|2004|8||f
+129|NCIS: Los Angeles|NCIS: Los Angeles||10|4|a
+130|Marines|Marines|2025|1||w
+131|Absentia|Absentia|2017|3||f
+132|The Rookie: Feds|The Rookie: Feds||1||f
+133|His & Hers|His & Hers|2026|1||f
+134|Man on Fire|Man on Fire|2026|1||w
+135|Nemesis|Nemesis|2026|1||w
+137|Mindhunter|Mindhunter||1|9|a
+138|SEAL Team|SEAL Team||2|9|a
+139|Black Dove|Black Doves||2||w

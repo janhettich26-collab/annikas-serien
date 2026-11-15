@@ -1,0 +1,32 @@
+name: Staffeln pruefen
+on:
+  schedule:
+    - cron: '17 5 * * 1'   # jeden Montag frueh
+  workflow_dispatch:
+    inputs:
+      push_test:
+        description: 'Test-Push senden (ja)'
+        required: false
+permissions:
+  contents: write
+concurrency: woche
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with: { ref: daten, path: _daten }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install --no-save --no-package-lock web-push
+      - run: node scripts/update.mjs _daten
+        env:
+          VAPID_PUBLIC: ${{ vars.VAPID_PUBLIC }}
+          VAPID_PRIVATE: ${{ secrets.VAPID_PRIVATE }}
+          PUSH_TEST: ${{ inputs.push_test }}
+      - run: |
+          git config user.name "Serien-Automatik"
+          git config user.email "actions@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || (git commit -m "Staffelstand aktualisiert" && git push)
