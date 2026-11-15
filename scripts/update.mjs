@@ -41,7 +41,7 @@ fs.writeFileSync('data/news.json', JSON.stringify({ checked: today, events: mine
 
 const test = process.env.PUSH_TEST || process.env.PUSH_TITEL;
 if ((mine.length || test) && subs.length && process.env.VAPID_PRIVATE) {
-  const wp = (await import('web-push')).default;
+  const m = await import('web-push'); const wp = m.default && m.default.setVapidDetails ? m.default : m;
   wp.setVapidDetails('https://github.com/' + (process.env.GITHUB_REPOSITORY || ''), process.env.VAPID_PUBLIC, process.env.VAPID_PRIVATE);
   const body = process.env.PUSH_TITEL ? (process.env.PUSH_TEXT || '') : test ? 'Test: Benachrichtigungen funktionieren ✓' : mine.slice(0, 4).map(e => e.text).join('\n') + (mine.length > 4 ? `\n… und ${mine.length - 4} weitere` : '');
   for (const sub of subs) {
