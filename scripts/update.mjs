@@ -39,13 +39,13 @@ console.log('Aenderungen gesamt:', events.length, '| fuer Push:', mine.length); 
 fs.writeFileSync('data/shows.json', JSON.stringify(shows).replace(/\},\{"id"/g, '},\n{"id"'));
 fs.writeFileSync('data/news.json', JSON.stringify({ checked: today, events: mine.map(e => ({ ...e, d: today })).concat(old.events || []).slice(0, 40) }));
 
-const test = process.env.PUSH_TEST;
+const test = process.env.PUSH_TEST || process.env.PUSH_TITEL;
 if ((mine.length || test) && subs.length && process.env.VAPID_PRIVATE) {
   const wp = (await import('web-push')).default;
   wp.setVapidDetails('https://github.com/' + (process.env.GITHUB_REPOSITORY || ''), process.env.VAPID_PUBLIC, process.env.VAPID_PRIVATE);
-  const body = test ? 'Test: Benachrichtigungen funktionieren ✓' : mine.slice(0, 4).map(e => e.text).join('\n') + (mine.length > 4 ? `\n… und ${mine.length - 4} weitere` : '');
+  const body = process.env.PUSH_TITEL ? (process.env.PUSH_TEXT || '') : test ? 'Test: Benachrichtigungen funktionieren ✓' : mine.slice(0, 4).map(e => e.text).join('\n') + (mine.length > 4 ? `\n… und ${mine.length - 4} weitere` : '');
   for (const sub of subs) {
-    try { await wp.sendNotification(sub, JSON.stringify({ title: test ? 'Annikas Serien' : '🎬 Neue Staffel!', body })); console.log('Push gesendet'); }
+    try { await wp.sendNotification(sub, JSON.stringify({ title: process.env.PUSH_TITEL || (test ? 'Annikas Serien' : '🎬 Neue Staffel!'), body })); console.log('Push gesendet'); }
     catch (e) { console.log('Push fehlgeschlagen', e.statusCode || e.message); }
   }
 } else console.log('Kein Push (Ereignisse:', mine.length, '· Geraete:', subs.length, ')');

@@ -7,6 +7,12 @@ on:
       push_test:
         description: 'Test-Push senden (ja)'
         required: false
+      push_titel:
+        description: 'Eigene Nachricht: Titel'
+        required: false
+      push_text:
+        description: 'Eigene Nachricht: Text'
+        required: false
 permissions:
   contents: write
 concurrency: woche
@@ -25,6 +31,8 @@ jobs:
           VAPID_PUBLIC: ${{ vars.VAPID_PUBLIC }}
           VAPID_PRIVATE: ${{ secrets.VAPID_PRIVATE }}
           PUSH_TEST: ${{ inputs.push_test }}
+          PUSH_TITEL: ${{ inputs.push_titel }}
+          PUSH_TEXT: ${{ inputs.push_text }}
       - run: |
           git config user.name "Serien-Automatik"
           git config user.email "actions@users.noreply.github.com"
