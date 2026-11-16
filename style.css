@@ -95,3 +95,5 @@ footer a{color:var(--mu)}
 #dots{display:flex;justify-content:center;gap:6px;margin-top:10px}
 #dots i{width:6px;height:6px;border-radius:99px;background:#3a3a4c;transition:all .3s}
 #dots i.on{width:18px;background:linear-gradient(90deg,var(--pink),var(--or))}
+#vorschau{position:sticky;top:0;z-index:6;text-align:center;font-size:12px;font-weight:700;letter-spacing:.3px;color:#111;background:linear-gradient(90deg,var(--pink),var(--or));padding:calc(5px + env(safe-area-inset-top)) 8px 5px}
+#vorschau+header{top:26px;padding-top:10px}

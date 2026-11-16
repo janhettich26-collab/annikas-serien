@@ -12,15 +12,18 @@ const deDate = d => d ? d.split('-').reverse().join('.') : '';
 
 let base = [], news = [], filter = 'alle', query = '', sort = localStorage.sort || 'nr';
 let state = { shows: {}, added: [], removed: [] };
-try { Object.assign(state, JSON.parse(localStorage.state || '{}')); } catch (e) {}
-let tok = localStorage.ghk || '';
-if (location.hash.startsWith('#k=')) { tok = decodeURIComponent(location.hash.slice(3)); localStorage.ghk = tok; history.replaceState(null, '', location.pathname); }
+/* Vorschau (…/?vorschau): ohne Anmeldung ansehen und ausprobieren; liest Annikas Stand nur, speichert nichts, kein Zugangsschlüssel */
+const VORSCHAU = new URLSearchParams(location.search).has('vorschau');
+if (!VORSCHAU) try { Object.assign(state, JSON.parse(localStorage.state || '{}')); } catch (e) {}
+let tok = VORSCHAU ? '' : (localStorage.ghk || '');
+if (!VORSCHAU && location.hash.startsWith('#k=')) { tok = decodeURIComponent(location.hash.slice(3)); localStorage.ghk = tok; history.replaceState(null, '', location.pathname); }
 
 /* ---------- Daten ---------- */
 const all = () => base.concat(state.added.filter(a => !base.some(b => b.id === a.id))).filter(s => !state.removed.includes(s.id));
 const eff = s => ({ ...s.init, ...(state.shows[s.id] || {}) });
 function save(id, patch) {
   if (id) { const sh = all().find(s => s.id === id); state.shows[id] = { ...eff(sh), ...patch, t: Date.now() }; }
+  if (VORSCHAU) return;
   localStorage.state = JSON.stringify(state); schedulePush();
 }
 function hint(s) { // was gibt es Neues zu dieser Serie?
@@ -81,6 +84,7 @@ function detail(id) {
   <button class="ghost" data-del>Serie aus meiner Liste entfernen</button>`);
 }
 function settings() {
+  if (VORSCHAU) return openSheet('<button class="close" data-close>✕</button><h3 class="pl">Vorschau</h3><p class="tx">Das ist eine Vorschau von Annikas Serien-App. Du kannst alles antippen und ausprobieren – gespeichert wird nichts, und an Annikas Liste ändert sich nichts.</p><p class="tx">Die echte App hat dazu: eigene Anmeldung, automatische Sicherung und eine Mitteilung aufs Handy, sobald eine neue Staffel kommt.</p>');
   const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
   openSheet(`<button class="close" data-close>✕</button><h3 class="pl">Einstellungen</h3>
   <div class="lbl">Benachrichtigung bei neuer Staffel</div>
@@ -152,7 +156,7 @@ function merge(r) {
   for (const id in r.shows) if (!state.shows[id] || (r.shows[id].t || 0) > (state.shows[id].t || 0)) state.shows[id] = r.shows[id];
   (r.added || []).forEach(a => { if (!state.added.some(x => x.id === a.id)) state.added.push(a); });
   state.removed = [...new Set([...(state.removed || []), ...(r.removed || [])])];
-  localStorage.state = JSON.stringify(state);
+  if (!VORSCHAU) localStorage.state = JSON.stringify(state);
 }
 async function pull() { if (!tok) return; try { const f = await readFile('state.json', {}); sha = f.sha; merge(f.data); render(); } catch (e) { console.warn(e); } }
 function schedulePush() { if (!tok) return; clearTimeout(pushT); pushT = setTimeout(pushState, 2500); }
@@ -161,7 +165,7 @@ async function pushState(retry) {
     if (r.status === 409 || r.status === 422) { if (retry) return; await pull(); return pushState(true); }
     if (r.ok) sha = (await r.json()).content.sha; } catch (e) { console.warn(e); }
 }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && localStorage.dk) { loadBase().then(unlockKey).then(pull); } });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && localStorage.dk && !VORSCHAU) { loadBase().then(unlockKey).then(pull); } });
 
 /* ---------- Push ---------- */
 const u8 = s => Uint8Array.from(atob((s + '='.repeat((4 - s.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
@@ -181,7 +185,7 @@ async function enablePush() {
 /* ---------- Start ---------- */
 async function loadBase() {
   try { const [s, n] = await Promise.all([fetch('data/shows.json', { cache: 'no-cache' }).then(r => r.json()), fetch('data/news.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => ({}))]);
-    base = s; news = n.events || []; if (n.checked) $('#stand').textContent = 'Zuletzt geprüft: ' + deDate(n.checked); localStorage.base = JSON.stringify(s); render(); } catch (e) { }
+    base = s; news = n.events || []; if (n.checked) $('#stand').textContent = 'Zuletzt geprüft: ' + deDate(n.checked); if (!VORSCHAU) localStorage.base = JSON.stringify(s); render(); } catch (e) { }
 }
 /* ---------- Anmeldung (Name + Passwort; entschluesselt auch den Abgleich-Schluessel) ---------- */
 const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''), unhex = h => Uint8Array.from(h.match(/../g), x => parseInt(x, 16));
@@ -214,7 +218,13 @@ function login() {
   });
 }
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-if (localStorage.dk) start(); else login();
+async function startVorschau() {
+  const b = document.createElement('div'); b.id = 'vorschau'; b.textContent = 'Vorschau · zum Ausprobieren · nichts wird gespeichert'; document.body.prepend(b);
+  await loadBase();
+  try { merge(await fetch('https://raw.githubusercontent.com/' + CFG.owner + '/' + CFG.repo + '/' + CFG.branch + '/state.json', { cache: 'no-store' }).then(r => r.json())); } catch (e) { console.warn(e); }
+  render();
+}
+if (VORSCHAU) startVorschau(); else if (localStorage.dk) start(); else login();
 
 /* Abmelden */
 document.addEventListener('click', e => { if (e.target.closest('[data-out]')) { localStorage.removeItem('dk'); localStorage.removeItem('ghk'); location.reload(); } });
